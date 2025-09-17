@@ -6,7 +6,7 @@
 /*   By: erico-ke <erico-ke@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 10:28:44 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/09/17 13:13:54 by erico-ke         ###   ########.fr       */
+/*   Updated: 2025/09/17 13:19:13 by erico-ke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ typedef struct s_player
 {
 	int				x;
 	int				y;
-	int				x_uni;
-	int				y_uni;
+	double			x_uni;
+	double			y_uni;
 }	t_player;
 
 typedef struct s_plane
@@ -52,6 +52,16 @@ typedef struct s_plane
 	int				deltadisty;
 	int				sidedistx;
 	int				sidedisty;
+	int				mapx;
+	int				mapy;
+	int				stepx;
+	int				stepy;
+	int				hit;
+	int				side;
+	int				lineheight;
+	int				drawstart;
+	int				drawend;
+	int				color;
 }	t_plane;
 
 typedef struct s_data
