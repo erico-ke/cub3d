@@ -23,7 +23,7 @@ $(OBJDIR):
 	mkdir -p $@
 
 $(NAME): $(OBJECTS)
-	$(AR) -r $@ $?
+	ar rcs $@ $?
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
 	$(CC) -c $(CFLAGS) $< -o $@
