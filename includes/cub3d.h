@@ -6,7 +6,7 @@
 /*   By: erico-ke <erico-ke@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 10:28:44 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/09/17 11:52:15 by erico-ke         ###   ########.fr       */
+/*   Updated: 2025/09/17 12:15:19 by erico-ke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ typedef struct s_data
 	double			player_x;
 	double			player_y;
 	double			player_angle;
-}t_data;
-
-
+}	t_data;
 
 #endif
