@@ -1,32 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   mlx.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erico-ke <erico-ke@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/17 10:27:57 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/09/17 18:12:53 by erico-ke         ###   ########.fr       */
+/*   Created: 2025/09/17 18:07:23 by erico-ke          #+#    #+#             */
+/*   Updated: 2025/09/17 18:20:05 by erico-ke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-int	main(int argc, char **argv)
+void	handle_keypress(mlx_key_data_t keydata, void *param)
 {
 	t_data	*data;
 
-	if (argc != 2)
+	data = (t_data *)param;
+	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
 	{
-		ft_printf("Usage: %s <map_file.cub>\n", argv[0]);
-		return (EXIT_FAILURE);
+		mlx_close_window(data->mlx);
+		exit(EXIT_SUCCESS);
 	}
-	data = malloc(sizeof(t_data));
-	if (!data)
+}
+
+void	init_mlx(t_data *data)
+{
+	data->mlx = mlx_init(SCREEN_W, SCREEN_H, "Cub3D", true);
+	if (!data->mlx)
 	{
-		ft_printf("Error allocating memory for data");
-		return (EXIT_FAILURE);
+		perror("Error initializing MLX");
+		exit(EXIT_FAILURE);
 	}
-	init_mlx(data);
-	return (EXIT_SUCCESS);
+	mlx_key_hook(data->mlx, &handle_keypress, data);
+	mlx_loop(data->mlx);
 }

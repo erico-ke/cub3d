@@ -6,7 +6,7 @@
 /*   By: erico-ke <erico-ke@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 10:28:44 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/09/17 13:19:13 by erico-ke         ###   ########.fr       */
+/*   Updated: 2025/09/17 18:17:48 by erico-ke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@
 # include <string.h>
 # include <errno.h>
 # include <sys/time.h>
-# include <MLX42/MLX42.h>
-# include "libft.h"
+# include "../libs/MLX42/include/MLX42/MLX42.h"
+# include "../libs/libft/src/libft.h"
 
 /* MACROS */
 
-# define SCREEN_W 800
+# define SCREEN_W 1200
 # define SCREEN_H 600
 
 /* STRUCTS */
@@ -73,5 +73,9 @@ typedef struct s_data
 	t_plane			*plane;
 	t_player		*player;
 }	t_data;
+
+/* FUNCTION PROTOTYPES */
+
+void	init_mlx(t_data *data);
 
 #endif
