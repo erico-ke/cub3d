@@ -6,7 +6,7 @@
 /*   By: erico-ke <erico-ke@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 10:28:44 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/09/17 18:17:48 by erico-ke         ###   ########.fr       */
+/*   Updated: 2025/09/22 21:36:03 by erico-ke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef struct s_plane
 typedef struct s_data
 {
 	mlx_t			*mlx;
+	mlx_image_t		*img;
 	char			**map;
 	int				map_width;
 	int				map_height;
