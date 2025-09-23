@@ -6,7 +6,7 @@
 /*   By: erico-ke <erico-ke@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:07:23 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/09/22 21:41:42 by erico-ke         ###   ########.fr       */
+/*   Updated: 2025/09/23 16:07:20 by erico-ke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,26 @@ void	init_mlx(t_data *data)
 
 	int x;
 	int y;
-	x = 1;
-	y = 1;
-	while (y < SCREEN_H - 1)
+	x = 0;
+	y = 0;
+	data->plane = malloc(sizeof(t_plane));
+	if (!data->plane)
 	{
-		while (x < SCREEN_W / 2)
+		perror("Error: plane not initialized");
+		mlx_close_window(data->mlx);
+		exit(EXIT_FAILURE);
+	}
+	data->plane->ccolor = 0x87CEEB;
+	data->plane->fcolor = 0xAAAAAA;
+	for (y = 0; y < SCREEN_H; y++)
+	{
+		for (x = 0; x < SCREEN_W; x++)
 		{
-			mlx_put_pixel(data->img, x, y, 0x0000FFFF);
-			x++;
+			if (y < SCREEN_H / 2)
+				mlx_put_pixel(data->img, x, y, data->plane->ccolor);
+			else
+				mlx_put_pixel(data->img, x, y, data->plane->fcolor);
 		}
-		x = 1;
-		y++;
 	}
 	mlx_loop(data->mlx);
 }

@@ -6,7 +6,7 @@
 /*   By: erico-ke <erico-ke@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 10:28:44 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/09/22 21:36:03 by erico-ke         ###   ########.fr       */
+/*   Updated: 2025/09/23 15:55:32 by erico-ke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ typedef struct s_plane
 	int				lineheight;
 	int				drawstart;
 	int				drawend;
-	int				color;
+	uint32_t		fcolor;
+	uint32_t		ccolor;
 }	t_plane;
 
 typedef struct s_data
