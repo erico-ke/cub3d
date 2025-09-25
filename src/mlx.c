@@ -6,7 +6,7 @@
 /*   By: erico-ke <erico-ke@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:15:03 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/09/25 17:21:06 by erico-ke         ###   ########.fr       */
+/*   Updated: 2025/09/25 17:31:58 by erico-ke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,12 +115,12 @@ void	init_test_map(t_data *data)
 	}
 	data->map[0] = ft_strdup("1111111111");
 	data->map[1] = ft_strdup("1000000001");
-	data->map[2] = ft_strdup("1010001001");
-	data->map[3] = ft_strdup("1000100001");
-	data->map[4] = ft_strdup("1000010001");
-	data->map[5] = ft_strdup("1001000001");
-	data->map[6] = ft_strdup("1000100001");
-	data->map[7] = ft_strdup("1010000101");
+	data->map[2] = ft_strdup("1000000001");
+	data->map[3] = ft_strdup("1000000001");
+	data->map[4] = ft_strdup("1000000001");
+	data->map[5] = ft_strdup("1000000001");
+	data->map[6] = ft_strdup("1000000001");
+	data->map[7] = ft_strdup("1000000001");
 	data->map[8] = ft_strdup("1000000001");
 	data->map[9] = ft_strdup("1111111111");
 	data->map[10] = NULL;
