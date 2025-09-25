@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: erico-ke <erico-ke@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/17 18:07:23 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/09/23 16:29:31 by erico-ke         ###   ########.fr       */
+/*   Created: 2025/09/25 17:13:07 by erico-ke          #+#    #+#             */
+/*   Updated: 2025/09/25 17:13:18 by erico-ke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ void	handle_keypress(mlx_key_data_t keydata, void *param)
     data = (t_data *)param;
     if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
     {
-        mlx_close_window(data->mlx);
-        exit(EXIT_SUCCESS);
+    mlx_close_window(data->mlx);
+    exit(EXIT_SUCCESS);
     }
 }
 
@@ -34,11 +34,11 @@ void	move_player(t_data *data, double move_x, double move_y)
     
     // Verificar colisiones en X
     if (data->map[(int)data->player->y_uni][(int)new_x] != '1')
-        data->player->x_uni = new_x;
+    data->player->x_uni = new_x;
     
     // Verificar colisiones en Y
     if (data->map[(int)new_y][(int)data->player->x_uni] != '1')
-        data->player->y_uni = new_y;
+    data->player->y_uni = new_y;
     
     // Actualizar posiciones enteras
     data->player->x = (int)data->player->x_uni;
@@ -63,21 +63,21 @@ void	handle_movement(t_data *data)
 {
     // Movimiento hacia adelante/atrás
     if (mlx_is_key_down(data->mlx, MLX_KEY_W))
-        move_player(data, data->player->dir_x * MOVE_SPEED, data->player->dir_y * MOVE_SPEED);
+    move_player(data, data->player->dir_x * MOVE_SPEED, data->player->dir_y * MOVE_SPEED);
     if (mlx_is_key_down(data->mlx, MLX_KEY_S))
-        move_player(data, -data->player->dir_x * MOVE_SPEED, -data->player->dir_y * MOVE_SPEED);
+    move_player(data, -data->player->dir_x * MOVE_SPEED, -data->player->dir_y * MOVE_SPEED);
     
     // Movimiento lateral (strafe)
     if (mlx_is_key_down(data->mlx, MLX_KEY_A))
-        move_player(data, data->player->plane_x * MOVE_SPEED, data->player->plane_y * MOVE_SPEED);
+    move_player(data, data->player->plane_x * MOVE_SPEED, data->player->plane_y * MOVE_SPEED);
     if (mlx_is_key_down(data->mlx, MLX_KEY_D))
-        move_player(data, -data->player->plane_x * MOVE_SPEED, -data->player->plane_y * MOVE_SPEED);
+    move_player(data, -data->player->plane_x * MOVE_SPEED, -data->player->plane_y * MOVE_SPEED);
     
     // Rotación horizontal de la cámara
     if (mlx_is_key_down(data->mlx, MLX_KEY_LEFT))
-        rotate_player(data, ROT_SPEED);
+    rotate_player(data, ROT_SPEED);
     if (mlx_is_key_down(data->mlx, MLX_KEY_RIGHT))
-        rotate_player(data, -ROT_SPEED);
+    rotate_player(data, -ROT_SPEED);
 }
 
 void	init_player(t_data *data)
@@ -85,9 +85,9 @@ void	init_player(t_data *data)
     data->player = malloc(sizeof(t_player));
     if (!data->player)
     {
-        perror("Error: player not initialized");
-        mlx_close_window(data->mlx);
-        exit(EXIT_FAILURE);
+    perror("Error: player not initialized");
+    mlx_close_window(data->mlx);
+    exit(EXIT_FAILURE);
     }
     // Posición inicial del jugador (puedes ajustar estos valores)
     data->player->x_uni = 2.0;
@@ -110,8 +110,8 @@ void	init_test_map(t_data *data)
     data->map = malloc(sizeof(char *) * (data->map_height + 1));
     if (!data->map)
     {
-        perror("Error: map not initialized");
-        exit(EXIT_FAILURE);
+    perror("Error: map not initialized");
+    exit(EXIT_FAILURE);
     }
     data->map[0] = ft_strdup("1111111111");
     data->map[1] = ft_strdup("1000000001");
@@ -140,16 +140,16 @@ void	init_mlx(t_data *data)
     data->mlx = mlx_init(SCREEN_W, SCREEN_H, "Cub3D", true);
     if (!data->mlx)
     {
-        perror("Error initializing MLX");
-        exit(EXIT_FAILURE);
+    perror("Error initializing MLX");
+    exit(EXIT_FAILURE);
     }
     mlx_key_hook(data->mlx, &handle_keypress, data);
     data->img = mlx_new_image(data->mlx, SCREEN_W, SCREEN_H);
     if (!data->img)
     {
-        perror("Error creating image");
-        mlx_close_window(data->mlx);
-        exit(EXIT_FAILURE);
+    perror("Error creating image");
+    mlx_close_window(data->mlx);
+    exit(EXIT_FAILURE);
     }
     mlx_image_to_window(data->mlx, data->img, 0, 0);
 
@@ -157,9 +157,9 @@ void	init_mlx(t_data *data)
     data->plane = malloc(sizeof(t_plane));
     if (!data->plane)
     {
-        perror("Error: plane not initialized");
-        mlx_close_window(data->mlx);
-        exit(EXIT_FAILURE);
+    perror("Error: plane not initialized");
+    mlx_close_window(data->mlx);
+    exit(EXIT_FAILURE);
     }
     data->plane->ccolor = 0x87CEEBFF; // Cielo azul claro
     data->plane->fcolor = 0x8B4513FF; // Suelo marrón
