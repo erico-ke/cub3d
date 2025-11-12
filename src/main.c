@@ -43,6 +43,25 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	}
 
+	// Inicializar estructura del jugador
+	data->player = malloc(sizeof(t_player));
+	if (!data->player)
+	{
+		ft_printf("Error allocating memory for player\n");
+		free_map(data->map);
+		free(data);
+		return (EXIT_FAILURE);
+	}
+
+	// Buscar posición y orientación del jugador en el mapa
+	if (find_player_position(data->map, data->player) != 0)
+	{
+		free(data->player);
+		free_map(data->map);
+		free(data);
+		return (EXIT_FAILURE);
+	}
+
 	init_mlx(data);
 	return (EXIT_SUCCESS);
 }

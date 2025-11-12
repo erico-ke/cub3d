@@ -91,12 +91,22 @@ typedef struct s_data
 
 /**
  * @brief Initializes the MLX42 graphics library and sets up the game window
- * @param data Pointer to the main data structure containing all game information
+ * @param data Pointer to the main data structure containing game info
  *
- * Sets up the MLX window, creates the image buffer, initializes player position,
- * creates test map, and starts the main game loop with event handling.
+ * Sets up the MLX window, creates the image buffer, calculates map dimensions,
+ * and starts the main game loop with event handling.
  */
 void		init_mlx(t_data *data);
+
+/**
+ * @brief Calculates the dimensions (width and height) of the loaded map
+ * @param data Pointer to the main data structure containing map information
+ *
+ * Counts the number of rows in the map for height.
+ * Finds the longest row length for width to handle irregular map shapes.
+ * Updates data->map_width and data->map_height fields.
+ */
+void		calculate_map_dimensions(t_data *data);
 
 /**
  * @brief Initializes a ray for raycasting calculation for a specific screen
@@ -118,7 +128,7 @@ void		init_ray(t_ray *ray, t_player *player, int x);
  * @param player Pointer to player structure with current position
  *
  * Determines step direction (-1 or +1) based on ray direction sign.
- * Calculates initial sidedist: distance from current position to next grid line.
+ * Calculates initial sidedist: distance from current pos to next grid line.
  * Formula: sidedist = (next_grid_pos - current_pos) * deltadist
  */
 void		calculate_step_and_side_dist(t_ray *ray, t_player *player);
@@ -145,7 +155,7 @@ void		perform_dda(t_ray *ray, char **map);
  * This avoids fisheye effect by using perpendicular distance instead of actual
  *  distance.
  * Calculates wall height: SCREEN_H / perpendicular_distance
- * Determines drawstart/drawend: vertical pixel range to draw the wall on screen.
+ * Determines drawstart/drawend: vertical pixel range to draw wall on screen.
  */
 void		calculate_wall_distance(t_ray *ray, t_player *player);
 
@@ -169,7 +179,7 @@ void		draw_vertical_line(t_data *data, int x, t_ray *ray);
  * Orchestrates the full raycasting pipeline:
  * 1. Initialize ray parameters, 2. Calculate DDA setup, 3. Perform wall
  *  detection,
- * 4. Calculate distances and screen boundaries, 5. Draw the resulting wall line.
+ * 4. Calculate distances and screen boundaries, 5. Draw resulting wall line.
  */
 void		cast_single_ray(t_data *data, int x);
 
@@ -248,5 +258,72 @@ void		handle_movement(t_data *data);
 /* PARSER FUNCTIONS */
 int			read_map(const char *filecub, t_data *data);
 void		free_map(char **map);
+
+/**
+ * @brief Checks if a line contains only valid map characters
+ * @param line String to check
+ * @return int 1 if valid map line, 0 otherwise
+ *
+ * Valid map characters: '0' (empty), '1' (wall), ' ' (space),
+ * 'N' 'S' 'E' 'W' (player positions)
+ */
+int			is_map_line(char *line);
+
+/**
+ * @brief Extracts only the map portion from all file lines
+ * @param all_lines Array of all lines from the .cub file
+ * @return char** Array containing only map lines, NULL on error
+ *
+ * Separates map content from configuration (textures, colors).
+ * Map must be the last section in the file according to subject.
+ */
+char		**extract_map_lines(char **all_lines);
+
+/**
+ * @brief Finds the player position and orientation in the map
+ * @param map 2D char array representing the game map
+ * @param player Pointer to player structure to initialize
+ * @return int 0 on success, 1 on error (no player found or multiple players)
+ *
+ * Searches for exactly one player character (N, S, E, W) in the map.
+ * Sets player position (x, y) and direction vectors based on orientation:
+ * - N (North): dir_y = -1, dir_x = 0, plane_x = 0.66
+ * - S (South): dir_y = 1, dir_x = 0, plane_x = -0.66
+ * - E (East): dir_x = 1, dir_y = 0, plane_y = 0.66
+ * - W (West): dir_x = -1, dir_y = 0, plane_y = -0.66
+ * Replaces player character with '0' (empty space) after finding it.
+ */
+int			find_player_position(char **map, t_player *player);
+
+/**
+ * @brief Sets player direction and camera plane based on orientation character
+ * @param player Pointer to player structure to update
+ * @param orientation Character indicating direction (N, S, E, W)
+ *
+ * Configures direction vector (where player looks) and camera plane vector
+ * (perpendicular to direction, determines FOV width):
+ * Camera plane length of 0.66 provides ~60 degree field of view.
+ */
+void		set_player_orientation(t_player *player, char orientation);
+
+/**
+ * @brief Validates that the map contains exactly one player
+ * @param map 2D char array representing the game map
+ * @return int Number of players found (should be exactly 1)
+ *
+ * Counts occurrences of player characters (N, S, E, W) in the map.
+ * Returns count for validation - exactly 1 player required for valid map.
+ */
+int			count_players_in_map(char **map);
+
+/**
+ * @brief Search for player character in the map and set its position
+ * @param map 2D char array representing the game map
+ * @param player Pointer to player structure to update
+ * @return int 0 on success, 1 on error
+ *
+ * Internal function to locate and set player position after validation.
+ */
+int			search_player_in_map(char **map, t_player *player);
 
 #endif

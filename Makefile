@@ -20,7 +20,10 @@ OBJS = $(SRCS:$(SRCDIR)%.c=$(OBJDIR)%.o)
 all : $(NAME)
 
 $(NAME) : $(OBJS) $(MLX42) $(LIBFT)
-	@$(CC) $(CFLAGS) $(OBJS) $(MLX42) $(LIBFT) $(HEADERS) -lglfw -o $(NAME) -lm >/dev/null
+	@$(CC) $(CFLAGS) $(OBJS) $(MLX42) $(LIBFT) $(HEADERS) \
+		-L$(MLX42_PATH)/build/_deps/glfw-build/src -lglfw3 \
+		-lX11 -lXrandr -lXi -lXxf86vm -lXcursor -lXinerama -lXext \
+		-ldl -lpthread -lGL -o $(NAME) -lm >/dev/null
 	@echo "$(GREEN)$(EYE) $(NAME) compiled successfully! $(DEF_COLOR)"
 
 $(LIBFT) :
