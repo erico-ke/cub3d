@@ -6,12 +6,12 @@
 /*   By: fracurul <fracurul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 17:00:00 by fracurul          #+#    #+#             */
-/*   Updated: 2025/09/17 19:25:57 by fracurul         ###   ########.fr       */
+/*   Updated: 2025/11/12 15:00:22 by fracurul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 //Read Map.cub & keep it into data->map //right now this funct is a prototype(it does not work)
-char	**read_map(const char *filecub, int fd)
+char	**read_map(const char *filecub, t_data *data)
 {
 	char	*line;
 	char	*tmp;
