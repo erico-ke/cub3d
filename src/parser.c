@@ -6,27 +6,27 @@
 /*   By: fracurul <fracurul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 17:00:00 by fracurul          #+#    #+#             */
-/*   Updated: 2025/11/12 15:00:22 by fracurul         ###   ########.fr       */
+/*   Updated: 2025/11/12 15:33:41 by fracurul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 //Read Map.cub & keep it into data->map //right now this funct is a prototype(it does not work)
-char	**read_map(const char *filecub, t_data *data)
+int	read_map(const char *filecub, t_data *data)
 {
+	int		fd;
 	char	*line;
 	char	*tmp;
 
-	line = get_next_line(fd);
+	fd= open(filecub, O_RDONLY);
 	tmp = NULL;
-	if (!line)
-		return (free(line), error_msg("Reading error"), 1);
-	while (line)
+	if (fd < 0)
+		return(error_msg("Error opening file"), 1);
+	while (line = get_next_line(fd))
 	{
 		tmp = gnl_strjoin(tmp, line);
 		free(line);
-		line = get_next_line(fd);
 	}
-	line = tmp;
+	close(fd);
 	while(*line)
 	{
 		if(*line == '\n' && (*(line + 1) == '\n'))
