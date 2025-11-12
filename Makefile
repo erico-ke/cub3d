@@ -42,10 +42,11 @@ clean :
 	@make -C $(MLX42_PATH)/build clean >/dev/null
 	@echo "$(WHITE)$(EYE) Cleaned object files and MLX42 build files! $(DEF_COLOR)"
 
-fclean : clean
+fclean :
+	@$(RM) $(OBJDIR)
 	@$(RM) $(NAME)
 	@make -C $(LIBFT_PATH) fclean >/dev/null
-	@$(RM) $(MLX42_PATH)/build
+	@$(RM) $(MLX42_PATH)/build/*
 	@echo "$(WHITE)$(EYE) Fully cleaned project! $(DEF_COLOR)"
 
 re : fclean all
