@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: erico-ke <erico-ke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fracurul <fracurul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 10:27:57 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/09/25 17:23:46 by erico-ke         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:01:53 by fracurul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,28 @@ int	main(int argc, char **argv)
 		ft_printf("Usage: %s <map_file.cub>\n", argv[0]);
 		return (EXIT_FAILURE);
 	}
+
+	// Verificar que el archivo tenga extensión .cub
+	if (!ft_strnstr(argv[1], ".cub", ft_strlen(argv[1])))
+	{
+		ft_printf("Error: File must have .cub extension\n");
+		return (EXIT_FAILURE);
+	}
+
 	data = malloc(sizeof(t_data));
 	if (!data)
 	{
-		ft_printf("Error allocating memory for data");
+		ft_printf("Error allocating memory for data\n");
 		return (EXIT_FAILURE);
 	}
+
+	// Leer y parsear el mapa antes de inicializar MLX
+	if (read_map(argv[1], data) != 0)
+	{
+		free(data);
+		return (EXIT_FAILURE);
+	}
+
 	init_mlx(data);
 	return (EXIT_SUCCESS);
 }

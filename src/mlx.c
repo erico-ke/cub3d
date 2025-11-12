@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mlx.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: erico-ke <erico-ke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fracurul <fracurul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:15:03 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/10/15 16:15:50 by erico-ke         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:43:35 by fracurul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@ void	handle_keypress(mlx_key_data_t keydata, void *param)
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
 	{
 		mlx_close_window(data->mlx);
+		free_map(data->map);
+		free(data->player);
+		free(data->plane);
+		free(data);
 		exit(EXIT_SUCCESS);
 	}
 }
@@ -92,12 +96,12 @@ void	init_test_map(t_data *data)
 {
 	data->map_height = 10;
 	data->map_width = 10;
-	data->map = malloc(sizeof(char *) * (data->map_height + 1));
+	/*data->map = malloc(sizeof(char *) * (data->map_height + 1));
 	if (!data->map)
 	{
 		perror("Error: map not initialized");
 		exit(EXIT_FAILURE);
-	}
+	}*/
 	data->map[0] = ft_strdup("1111111111");
 	data->map[1] = ft_strdup("1000000001");
 	data->map[2] = ft_strdup("1000010001");
@@ -122,12 +126,15 @@ void	game_loop(void *param)
 
 void	init_mlx(t_data *data)
 {
+	ft_printf("Attempting to initialize MLX...\n");
 	data->mlx = mlx_init(SCREEN_W, SCREEN_H, "Cub3D", true);
 	if (!data->mlx)
 	{
+		ft_printf("MLX initialization failed!\n");
 		perror("Error initializing MLX");
 		exit(EXIT_FAILURE);
 	}
+	ft_printf("MLX initialized successfully!\n");
 	mlx_key_hook(data->mlx, &handle_keypress, data);
 	data->img = mlx_new_image(data->mlx, SCREEN_W, SCREEN_H);
 	if (!data->img)
@@ -147,7 +154,7 @@ void	init_mlx(t_data *data)
 	data->plane->ccolor = 0x87CEEBFF;
 	data->plane->fcolor = 0x8B4513FF;
 	init_player(data);
-	init_test_map(data);
+	init_test_map(data); // Comentado porque ya tenemos el mapa del archivo .cub
 	mlx_loop_hook(data->mlx, game_loop, data);
 	mlx_loop(data->mlx);
 }
