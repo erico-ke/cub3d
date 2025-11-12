@@ -6,43 +6,76 @@
 /*   By: fracurul <fracurul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 17:00:00 by fracurul          #+#    #+#             */
-/*   Updated: 2025/11/12 16:34:12 by fracurul         ###   ########.fr       */
+/*   Updated: 2025/11/12 18:26:54 by fracurul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-//Read Map.cub & keep it into data->map
-int	read_map(const char *filecub, t_data *data)
+//Read Map.cub & filters textures and map
+int	read_cub(const char *filecub, t_data *data)
 {
 	int		fd;
 	char	*line;
-	char	*tmp;
+	char	*map_content;
 
 	fd = open(filecub, O_RDONLY);
-	tmp = NULL;
+	map_content = NULL;
 	if (fd < 0)
 		return (ft_printf("Error opening file\n"), 1);
 	while ((line = get_next_line(fd)))
 	{
-		tmp = ft_strjoin_g(tmp, line);
+		if (line[0] == ' ' || line[0] == '\t' || ft_isdigit(line[0]) || line[0] == '1')
+		{
+			map_content = ft_strjoin_g(map_content, line);
+		}
+		else
+			textures_n_colors(line, data, NULL);
 		free(line);
 	}
 	close(fd);
-	if (!tmp)
-		return (ft_printf("Empty file or invalid file\n"), 1);
-	data->map = ft_split(tmp, '\n');
-	free(tmp);
+	if (!map_content)
+		return (ft_printf("No map found in file\n"), 1);
+	data->map = ft_split(map_content, '\n');
+	free(map_content);
 	return (0);
 }
 
 //Parse textures & colors.
-int	parse_textures_n_colors(char **lines, t_data *data)
+void	textures_n_colors(char *line, t_data *data, char **rgb)
 {
-	(void)lines;
-	(void)data;
-	// TODO: Implementar parser de texturas y colores
-	return (0);
+	if (ft_strncmp(line, "NO ", 3) == 0)
+		data->plane->NO_texture = ft_strdup(line + 3);
+	else if (ft_strncmp(line, "SO ", 3) == 0)
+		data->plane->SO_texture = ft_strdup(line + 3);
+	else if (ft_strncmp(line, "WE ", 3) == 0)
+		data->plane->WE_texture = ft_strdup(line + 3);
+	else if (ft_strncmp(line, "EA ", 3) == 0)
+		data->plane->EA_texture = ft_strdup(line + 3);
+	else if (ft_strncmp(line, "F ", 2) == 0)
+	{
+		rgb = ft_split(line + 2, ',');
+		data->plane->F_red = ft_atoi(rgb[0]);
+		data->plane->F_green = ft_atoi(rgb[1]);
+		data->plane->F_blue = ft_atoi(rgb[2]);
+		free_map(rgb);
+	}
+	else if (ft_strncmp(line, "C ", 2) == 0)
+	{
+		rgb = ft_split(line + 2, ',');
+		data->plane->C_red = ft_atoi(rgb[0]);
+		data->plane->C_green = ft_atoi(rgb[1]);
+		data->plane->C_blue = ft_atoi(rgb[2]);
+		free_map(rgb);
+	}
+}
+//Converts int to uint32_t
+void	parse_color(t_plane *plane)
+{
+	plane->ccolor = (plane->C_red << 24) | (plane->C_green << 16)
+		| (plane->C_blue << 8) | 255;
+	plane->fcolor = (plane->F_red << 24) | (plane->F_green << 16)
+		| (plane->F_blue << 8) | 255;
 }
 
 //Check walls(walls has to be around all the map as delimiters)
@@ -83,4 +116,25 @@ void	free_map(char **map)
 		i++;
 	}
 	free(map);
+}
+
+//Debug function to print map content
+void	print_map_debug(char **map)
+{
+	int	i;
+
+	if (!map)
+	{
+		ft_printf("Map is NULL\n");
+		return;
+	}
+
+	ft_printf("=== MAP CONTENT DEBUG ===\n");
+	i = 0;
+	while (map[i])
+	{
+		ft_printf("Line %d: [%s]\n", i, map[i]);
+		i++;
+	}
+	ft_printf("=== END MAP DEBUG (total %d lines) ===\n", i);
 }

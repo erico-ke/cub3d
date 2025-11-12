@@ -6,7 +6,7 @@
 /*   By: fracurul <fracurul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:12:45 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/11/12 16:24:10 by fracurul         ###   ########.fr       */
+/*   Updated: 2025/11/12 18:22:50 by fracurul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,16 @@ typedef struct s_ray
 
 typedef struct s_plane
 {
+	char	*NO_texture;
+	char	*SO_texture;
+	char	*WE_texture;
+	char	*EA_texture;
+	int		F_red;
+	int		F_green;
+	int		F_blue;
+	int		C_red;
+	int		C_green;
+	int		C_blue;
 	uint32_t		ccolor;
 	uint32_t		fcolor;
 }	t_plane;
@@ -246,7 +256,10 @@ void		rotate_player(t_data *data, double rot);
 void		handle_movement(t_data *data);
 
 /* PARSER FUNCTIONS */
-int			read_map(const char *filecub, t_data *data);
+int			read_cub(const char *filecub, t_data *data);
+void		textures_n_colors(char *line, t_data *data, char **rgb);
+void		parse_color(t_plane *plane);
 void		free_map(char **map);
+void		print_map_debug(char **map);
 
 #endif
