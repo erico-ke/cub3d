@@ -30,31 +30,27 @@ int	is_map_line(char *line)
 	return (1);
 }
 
-//Extract only the map lines from the full file content
-char	**extract_map_lines(char **all_lines)
+//Find the start index of map lines
+static int	find_map_start(char **all_lines)
 {
-	char	**map_lines;
-	int		i;
-	int		j;
-	int		map_start;
-	int		map_count;
+	int	i;
 
-	// Find first map line
 	i = 0;
-	map_start = -1;
 	while (all_lines[i])
 	{
 		if (is_map_line(all_lines[i]))
-		{
-			map_start = i;
-			break;
-		}
+			return (i);
 		i++;
 	}
-	if (map_start == -1)
-		return (NULL);
-	
-	// Count map lines
+	return (-1);
+}
+
+//Count the number of consecutive map lines
+static int	count_map_lines(char **all_lines, int map_start)
+{
+	int	map_count;
+	int	i;
+
 	map_count = 0;
 	i = map_start;
 	while (all_lines[i] && is_map_line(all_lines[i]))
@@ -62,8 +58,16 @@ char	**extract_map_lines(char **all_lines)
 		map_count++;
 		i++;
 	}
-	
-	// Copy map lines
+	return (map_count);
+}
+
+//Copy map lines to new array
+static char	**copy_map_lines(char **all_lines, int map_start, int map_count)
+{
+	char	**map_lines;
+	int		i;
+	int		j;
+
 	map_lines = malloc(sizeof(char *) * (map_count + 1));
 	if (!map_lines)
 		return (NULL);
@@ -79,84 +83,63 @@ char	**extract_map_lines(char **all_lines)
 	return (map_lines);
 }
 
-//Read Map.cub & keep it into data->map
-int	read_map(const char *filecub, t_data *data)
+//Extract only the map lines from the full file content
+char	**extract_map_lines(char **all_lines)
 {
-	int		fd;
+	int	map_start;
+	int	map_count;
+
+	map_start = find_map_start(all_lines);
+	if (map_start == -1)
+		return (NULL);
+	map_count = count_map_lines(all_lines, map_start);
+	return (copy_map_lines(all_lines, map_start, map_count));
+}
+
+//Read Map.cub & keep it into data->map
+//Read all lines from file into a single string
+static char	*read_file_content(int fd)
+{
 	char	*line;
 	char	*tmp;
-	char	**all_lines;
 
-	fd = open(filecub, O_RDONLY);
 	tmp = NULL;
-	if (fd < 0)
-		return (ft_printf("Error opening file\n"), 1);
 	while ((line = get_next_line(fd)))
 	{
 		tmp = ft_strjoin_g(tmp, line);
 		free(line);
 	}
-	close(fd);
-	if (!tmp)
+	return (tmp);
+}
+
+//Process file content and extract map
+static int	process_file_content(char *file_content, t_data *data)
+{
+	char	**all_lines;
+
+	if (!file_content)
 		return (ft_printf("Empty file or invalid file\n"), 1);
-	all_lines = ft_split(tmp, '\n');
-	free(tmp);
-	
-	// Extract only map lines (ignore config lines)
+	all_lines = ft_split(file_content, '\n');
+	free(file_content);
 	data->map = extract_map_lines(all_lines);
 	free_map(all_lines);
-	
 	if (!data->map)
 		return (ft_printf("Error: No valid map found in file\n"), 1);
 	return (0);
 }
 
-//Parse textures & colors.
-int	parse_textures_n_colors(char **lines, t_data *data)
+int	read_map(const char *filecub, t_data *data)
 {
-	(void)lines;
-	(void)data;
-	// TODO: Implementar parser de texturas y colores
-	return (0);
+	int		fd;
+	char	*file_content;
+
+	fd = open(filecub, O_RDONLY);
+	if (fd < 0)
+		return (ft_printf("Error opening file\n"), 1);
+	file_content = read_file_content(fd);
+	close(fd);
+	return (process_file_content(file_content, data));
 }
 
-//Check walls(walls has to be around all the map as delimiters)
-int	check_walls(char **map)
-{
-	(void)map;
-	// TODO: Implementar validación de paredes
-	return (0);
-}
 
-//Check instances(check if we have all the things to start our game)
-int	check_instances(char **map)
-{
-	(void)map;
-	// TODO: Implementar validación de instancias
-	return (0);
-}
-
-//Check if there is an exitent exit path to complete the game.
-int	check_exit_path(char **map)
-{
-	(void)map;
-	// TODO: Implementar validación de camino de salida
-	return (0);
-}
-
-//Free the map memory
-void	free_map(char **map)
-{
-	int	i;
-
-	if (!map)
-		return;
-	i = 0;
-	while (map[i])
-	{
-		free(map[i]);
-		i++;
-	}
-	free(map);
-}
 

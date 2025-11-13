@@ -36,8 +36,8 @@ int	count_players_in_map(char **map)
 	return (player_count);
 }
 
-//Set player orientation based on the character found (N, S, E, W)
-void	set_player_orientation(t_player *player, char orientation)
+//Set direction for North and South orientations
+static void	set_ns_orientation(t_player *player, char orientation)
 {
 	if (orientation == 'N')
 	{
@@ -53,7 +53,12 @@ void	set_player_orientation(t_player *player, char orientation)
 		player->plane_x = -0.66;
 		player->plane_y = 0;
 	}
-	else if (orientation == 'E')
+}
+
+//Set direction for East and West orientations
+static void	set_ew_orientation(t_player *player, char orientation)
+{
+	if (orientation == 'E')
 	{
 		player->dir_x = 1;
 		player->dir_y = 0;
@@ -67,6 +72,15 @@ void	set_player_orientation(t_player *player, char orientation)
 		player->plane_x = 0;
 		player->plane_y = -0.66;
 	}
+}
+
+//Set player orientation based on the character found (N, S, E, W)
+void	set_player_orientation(t_player *player, char orientation)
+{
+	if (orientation == 'N' || orientation == 'S')
+		set_ns_orientation(player, orientation);
+	else if (orientation == 'E' || orientation == 'W')
+		set_ew_orientation(player, orientation);
 }
 
 
