@@ -12,6 +12,51 @@
 
 #include "../includes/cub3d.h"
 
+void	cleanup_data(t_data *data)
+{
+	if (!data)
+		return ;
+	
+	// Liberar mapa
+	if (data->map)
+		free_map(data->map);
+	
+	// Liberar plane y sus strings
+	if (data->plane)
+	{
+		if (data->plane->NO_texture)
+			free(data->plane->NO_texture);
+		if (data->plane->SO_texture)
+			free(data->plane->SO_texture);
+		if (data->plane->WE_texture)
+			free(data->plane->WE_texture);
+		if (data->plane->EA_texture)
+			free(data->plane->EA_texture);
+		
+		// Liberar texturas MLX (si MLX está inicializado)
+		if (data->mlx)
+		{
+			if (data->plane->tex_north)
+				mlx_delete_texture(data->plane->tex_north);
+			if (data->plane->tex_south)
+				mlx_delete_texture(data->plane->tex_south);
+			if (data->plane->tex_west)
+				mlx_delete_texture(data->plane->tex_west);
+			if (data->plane->tex_east)
+				mlx_delete_texture(data->plane->tex_east);
+		}
+		
+		free(data->plane);
+	}
+	
+	// Liberar player
+	if (data->player)
+		free(data->player);
+	
+	// Liberar data
+	free(data);
+}
+
 void	handle_keypress(mlx_key_data_t keydata, void *param)
 {
 	t_data	*data;
@@ -20,10 +65,7 @@ void	handle_keypress(mlx_key_data_t keydata, void *param)
 	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
 	{
 		mlx_close_window(data->mlx);
-		free_map(data->map);
-		free(data->player);
-		free(data->plane);
-		free(data);
+		cleanup_data(data);
 		exit(EXIT_SUCCESS);
 	}
 }
@@ -73,46 +115,101 @@ void	handle_movement(t_data *data)
 		rotate_player(data, -ROT_SPEED);
 }
 
+void	set_player_direction(t_player *player, char orientation)
+{
+	if (orientation == 'N')
+	{
+		player->dir_x = 0.0;
+		player->dir_y = -1.0;
+		player->plane_x = 0.66;
+		player->plane_y = 0.0;
+	}
+	else if (orientation == 'S')
+	{
+		player->dir_x = 0.0;
+		player->dir_y = 1.0;
+		player->plane_x = -0.66;
+		player->plane_y = 0.0;
+	}
+	else if (orientation == 'E')
+	{
+		player->dir_x = 1.0;
+		player->dir_y = 0.0;
+		player->plane_x = 0.0;
+		player->plane_y = 0.66;
+	}
+	else if (orientation == 'W')
+	{
+		player->dir_x = -1.0;
+		player->dir_y = 0.0;
+		player->plane_x = 0.0;
+		player->plane_y = -0.66;
+	}
+}
+
 void	init_player(t_data *data)
 {
+	int	i;
+	int	j;
+	char	orientation;
+
 	data->player = malloc(sizeof(t_player));
 	if (!data->player)
 	{
 		perror("Error: player not initialized");
 		mlx_close_window(data->mlx);
+		cleanup_data(data);
 		exit(EXIT_FAILURE);
 	}
-	data->player->x_uni = 2.0;
-	data->player->y_uni = 2.0;
-	data->player->x = (int)data->player->x_uni;
-	data->player->y = (int)data->player->y_uni;
-	data->player->dir_x = 1.0;
-	data->player->dir_y = 0.0;
-	data->player->plane_x = 0.0;
-	data->player->plane_y = 0.66;
+	// Buscar posición del jugador en el mapa
+	i = 0;
+	orientation = '\0';
+	while (data->map[i])
+	{
+		j = 0;
+		while (data->map[i][j])
+		{
+			if (data->map[i][j] == 'N' || data->map[i][j] == 'S' ||
+				data->map[i][j] == 'E' || data->map[i][j] == 'W')
+			{
+				orientation = data->map[i][j];
+				data->player->x_uni = (double)j + 0.5;
+				data->player->y_uni = (double)i + 0.5;
+				data->player->x = j;
+				data->player->y = i;
+				// Reemplazar con '0' para que el raycaster lo vea como espacio vacío
+				data->map[i][j] = '0';
+				break;
+			}
+			j++;
+		}
+		if (orientation != '\0')
+			break;
+		i++;
+	}
+	// Configurar dirección según orientación
+	set_player_direction(data->player, orientation);
 }
 
-void	init_test_map(t_data *data)
+void	calculate_map_dimensions(t_data *data)
 {
-	data->map_height = 10;
-	data->map_width = 10;
-	/*data->map = malloc(sizeof(char *) * (data->map_height + 1));
-	if (!data->map)
+	int	i;
+	int	len;
+
+	data->map_height = 0;
+	data->map_width = 0;
+	i = 0;
+	while (data->map[i])
 	{
-		perror("Error: map not initialized");
-		exit(EXIT_FAILURE);
-	}*/
-	data->map[0] = ft_strdup("1111111111");
-	data->map[1] = ft_strdup("1000000001");
-	data->map[2] = ft_strdup("1000010001");
-	data->map[3] = ft_strdup("1000000001");
-	data->map[4] = ft_strdup("1000000001");
-	data->map[5] = ft_strdup("1001000001");
-	data->map[6] = ft_strdup("1000001001");
-	data->map[7] = ft_strdup("1000001001");
-	data->map[8] = ft_strdup("1000001001");
-	data->map[9] = ft_strdup("1111111111");
-	data->map[10] = NULL;
+		len = ft_strlen(data->map[i]);
+		// Remover newline si existe
+		if (len > 0 && data->map[i][len - 1] == '\n')
+			len--;
+		if (len > data->map_width)
+			data->map_width = len;
+		data->map_height++;
+		i++;
+	}
 }
 
 void	game_loop(void *param)
@@ -132,6 +229,7 @@ void	init_mlx(t_data *data)
 	{
 		ft_printf("MLX initialization failed!\n");
 		perror("Error initializing MLX");
+		cleanup_data(data);
 		exit(EXIT_FAILURE);
 	}
 	ft_printf("MLX initialized successfully!\n");
@@ -141,20 +239,15 @@ void	init_mlx(t_data *data)
 	{
 		perror("Error creating image");
 		mlx_close_window(data->mlx);
+		cleanup_data(data);
 		exit(EXIT_FAILURE);
 	}
 	mlx_image_to_window(data->mlx, data->img, 0, 0);
-	data->plane = malloc(sizeof(t_plane));
-	if (!data->plane)
-	{
-		perror("Error: plane not initialized");
-		mlx_close_window(data->mlx);
-		exit(EXIT_FAILURE);
-	}
-	data->plane->ccolor = 0x87CEEBFF;
-	data->plane->fcolor = 0x8B4513FF;
+	// data->plane ya fue inicializado y llenado por el parser en main.c
+	// Los colores ya están configurados en data->plane->ccolor y fcolor
+	load_textures(data);
+	calculate_map_dimensions(data);
 	init_player(data);
-	init_test_map(data); // Comentado porque ya tenemos el mapa del archivo .cub
 	mlx_loop_hook(data->mlx, game_loop, data);
 	mlx_loop(data->mlx);
 }

@@ -67,20 +67,26 @@ typedef struct s_ray
 	int				lineheight;
 	int				drawstart;
 	int				drawend;
-}	t_ray;
+	double			wallx;
+	int				texx;
+}   t_ray;
 
 typedef struct s_plane
 {
-	char	*NO_texture;
-	char	*SO_texture;
-	char	*WE_texture;
-	char	*EA_texture;
-	int		F_red;
-	int		F_green;
-	int		F_blue;
-	int		C_red;
-	int		C_green;
-	int		C_blue;
+	char			*NO_texture;
+	char			*SO_texture;
+	char			*WE_texture;
+	char			*EA_texture;
+	mlx_texture_t	*tex_north;
+	mlx_texture_t	*tex_south;
+	mlx_texture_t	*tex_west;
+	mlx_texture_t	*tex_east;
+	int				F_red;
+	int				F_green;
+	int				F_blue;
+	int				C_red;
+	int				C_green;
+	int				C_blue;
 	uint32_t		ccolor;
 	uint32_t		fcolor;
 }	t_plane;
@@ -254,6 +260,13 @@ void		rotate_player(t_data *data, double rot);
  * All movements include collision detection via move_player().
  */
 void		handle_movement(t_data *data);
+
+/* CLEANUP FUNCTIONS */
+void		cleanup_data(t_data *data);
+
+/* TEXTURE FUNCTIONS */
+void		load_textures(t_data *data);
+uint32_t	get_texture_color(mlx_texture_t *texture, int x, int y);
 
 /* PARSER FUNCTIONS */
 int			read_cub(const char *filecub, t_data *data);

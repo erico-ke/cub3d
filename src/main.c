@@ -44,18 +44,31 @@ int	main(int argc, char **argv)
 		ft_printf("Error allocating memory for plane\n");
 		return (EXIT_FAILURE);
 	}
+	
+	// Inicializar punteros a NULL para cleanup seguro
+	data->plane->NO_texture = NULL;
+	data->plane->SO_texture = NULL;
+	data->plane->WE_texture = NULL;
+	data->plane->EA_texture = NULL;
+	data->plane->tex_north = NULL;
+	data->plane->tex_south = NULL;
+	data->plane->tex_west = NULL;
+	data->plane->tex_east = NULL;
+	data->map = NULL;
+	data->player = NULL;
+	data->mlx = NULL;
 
 	// Leer y parsear el archivo .cub completo
 	if (read_cub(argv[1], data) != 1)
 	{
-		free(data);
+		cleanup_data(data);
 		return (EXIT_FAILURE);
 	}
 
 	// Convertir colores RGB a formato RGBA
 	parse_color(data->plane);
 
-	// TODO: Uncomment for debugging
+	// DEBUG: Descomentar para ver información del mapa
 	// print_map_debug(data->map);
 	// ft_printf("Textures: NO=[%s] SO=[%s] WE=[%s] EA=[%s]\n",
 	//     data->plane->NO_texture, data->plane->SO_texture,

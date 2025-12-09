@@ -56,7 +56,10 @@ void	calculate_step_and_side_dist(t_ray *ray, t_player *player)
 
 void	perform_dda(t_ray *ray, char **map)
 {
-	while (ray->hit == 0)
+	int	max_iterations;
+
+	max_iterations = 0;
+	while (ray->hit == 0 && max_iterations < 1000)
 	{
 		if (ray->sidedistx < ray->sidedisty)
 		{
@@ -70,8 +73,12 @@ void	perform_dda(t_ray *ray, char **map)
 			ray->mapy += ray->stepy;
 			ray->side = 1;
 		}
-		if (map[ray->mapy][ray->mapx] == '1')
+		// Detectar pared o límite del mapa (espacios, fin de línea, NULL)
+		if (ray->mapy < 0 || !map[ray->mapy] || ray->mapx < 0 
+			|| !map[ray->mapy][ray->mapx] || map[ray->mapy][ray->mapx] == ' '
+			|| map[ray->mapy][ray->mapx] == '\n' || map[ray->mapy][ray->mapx] == '1')
 			ray->hit = 1;
+		max_iterations++;
 	}
 }
 
@@ -90,6 +97,39 @@ void	calculate_wall_distance(t_ray *ray, t_player *player)
 	ray->drawend = ray->lineheight / 2 + SCREEN_H / 2;
 	if (ray->drawend >= SCREEN_H)
 		ray->drawend = SCREEN_H - 1;
+}
+
+mlx_texture_t	*select_texture(t_data *data, t_ray *ray)
+{
+	if (ray->side == 0)
+	{
+		if (ray->raydirx > 0)
+			return (data->plane->tex_east);
+		else
+			return (data->plane->tex_west);
+	}
+	else
+	{
+		if (ray->raydiry > 0)
+			return (data->plane->tex_south);
+		else
+			return (data->plane->tex_north);
+	}
+}
+
+void	calculate_texture_x(t_ray *ray, t_player *player, mlx_texture_t *texture)
+{
+	// Calcular wallX: posición exacta donde el rayo golpeó la pared
+	if (ray->side == 0)
+		ray->wallx = player->y_uni + ray->perpwalldist * ray->raydiry;
+	else
+		ray->wallx = player->x_uni + ray->perpwalldist * ray->raydirx;
+	ray->wallx -= floor(ray->wallx);
+
+	// Calcular texX: coordenada X de la textura
+	ray->texx = (int)(ray->wallx * (double)texture->width);
+	if ((ray->side == 0 && ray->raydirx > 0) || (ray->side == 1 && ray->raydiry < 0))
+		ray->texx = texture->width - ray->texx - 1;
 }
 
 uint32_t	get_wall_color(t_ray *ray)
@@ -117,13 +157,34 @@ uint32_t	get_wall_color(t_ray *ray)
 
 void	draw_vertical_line(t_data *data, int x, t_ray *ray)
 {
-	int			y;
-	uint32_t	color;
+	int				y;
+	uint32_t		color;
+	mlx_texture_t	*texture;
+	int				texy;
+	double			step;
+	double			texpos;
 
-	color = get_wall_color(ray);
+	texture = select_texture(data, ray);
+	calculate_texture_x(ray, data->player, texture);
+
+	// Calcular step: cuánto aumentar la coordenada de textura por cada pixel
+	step = 1.0 * texture->height / ray->lineheight;
+	texpos = (ray->drawstart - SCREEN_H / 2 + ray->lineheight / 2) * step;
+
 	y = ray->drawstart;
 	while (y <= ray->drawend)
 	{
+		// Usar módulo para soportar texturas de cualquier tamaño
+		texy = (int)texpos;
+		if (texy < 0)
+			texy = 0;
+		else if (texy >= (int)texture->height)
+			texy = texy % texture->height;
+		texpos += step;
+		color = get_texture_color(texture, ray->texx, texy);
+		// Aplicar shading para paredes horizontales (oscurecer un poco)
+		if (ray->side == 1)
+			color = (color >> 1) & 0x7F7F7F7F;
 		mlx_put_pixel(data->img, x, y, color);
 		y++;
 	}
