@@ -6,7 +6,7 @@
 /*   By: fracurul <fracurul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:12:45 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/11/12 18:22:50 by fracurul         ###   ########.fr       */
+/*   Updated: 2025/12/08 21:12:31 by fracurul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,5 +261,22 @@ void		textures_n_colors(char *line, t_data *data, char **rgb);
 void		parse_color(t_plane *plane);
 void		free_map(char **map);
 void		print_map_debug(char **map);
+
+/* PASER AUX FUNCS*/
+int		closed_line(char *line);
+char	get_first(char *line);
+char	get_last(char *line);
+int		check_perimeter(char **map);
+int		is_player(char c);
+void	save_player(t_player *player, int x, int y);
+int		check_player(char **map, t_player *player, int i, int j);
+int		is_playable(char c);
+int		valid_zone(char c);
+int		check_zone(char **map, int i, int j);
+int		check_hole(char **map);
+int		check_instances(char **map, t_player *player, t_plane *plane);
+int		check_textures(t_plane *plane);
+int		check_colors(t_plane *plane);
+int		check_config(t_plane *plane);
 
 #endif

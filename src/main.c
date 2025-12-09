@@ -6,7 +6,7 @@
 /*   By: fracurul <fracurul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 10:27:57 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/11/12 18:30:00 by fracurul         ###   ########.fr       */
+/*   Updated: 2025/12/08 22:03:48 by fracurul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	main(int argc, char **argv)
 	}
 
 	// Leer y parsear el archivo .cub completo
-	if (read_cub(argv[1], data) != 0)
+	if (read_cub(argv[1], data) != 1)
 	{
 		free(data);
 		return (EXIT_FAILURE);

@@ -6,7 +6,7 @@
 /*   By: fracurul <fracurul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 17:00:00 by fracurul          #+#    #+#             */
-/*   Updated: 2025/11/12 18:26:54 by fracurul         ###   ########.fr       */
+/*   Updated: 2025/12/08 22:13:18 by fracurul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ int	read_cub(const char *filecub, t_data *data)
 		return (ft_printf("Error opening file\n"), 1);
 	while ((line = get_next_line(fd)))
 	{
-		if (line[0] == ' ' || line[0] == '\t' || ft_isdigit(line[0]) || line[0] == '1')
+		if (line[0] == ' ' || line[0] == '\t' || ft_isdigit(line[0])
+			|| line[0] == '1')
 		{
 			map_content = ft_strjoin_g(map_content, line);
 		}
@@ -38,7 +39,7 @@ int	read_cub(const char *filecub, t_data *data)
 		return (ft_printf("No map found in file\n"), 1);
 	data->map = ft_split(map_content, '\n');
 	free(map_content);
-	return (0);
+	return (1);
 }
 
 //Parse textures & colors.
@@ -78,28 +79,56 @@ void	parse_color(t_plane *plane)
 		| (plane->F_blue << 8) | 255;
 }
 
-//Check walls(walls has to be around all the map as delimiters)
-int	check_walls(char **map)
+//Check_perimeter(walls(1) or spaces has to be around all the map as delimiters)
+int	check_perimeter(char **map)
 {
-	(void)map;
-	// TODO: Implementar validación de paredes
-	return (0);
-}
+	int	i;
+	int	lline;
+	char	last;
 
-//Check instances(check if we have all the things to start our game)
-int	check_instances(char **map)
-{
-	(void)map;
-	// TODO: Implementar validación de instancias
-	return (0);
+	i = 0;
+	last = '\0';
+	if (!map)
+		return (0);
+	while(map[i])
+		i++;
+	lline = i - 1;
+	i = 0;
+	if (!closed_line(map[0]) || !closed_line(map[lline]))
+		return (0);
+	while (map[i])
+	{
+		if (get_first(map[i]) != '1')
+			return (0);
+		last = get_last(map[i]);
+		if (last == '\0' || (last != '1' && last != ' '))
+			return (0);
+		i++;
+	}
+	return (1);
 }
-
-//Check if there is an exitent exit path to complete the game.
-int	check_exit_path(char **map)
+int	check_player(char **map, t_player *player, int i, int j)
 {
-	(void)map;
-	// TODO: Implementar validación de camino de salida
-	return (0);
+	int	count;
+	int	pos[2];
+
+	count = 0;
+	while (map[++i])
+	{
+		j = -1;
+		while (map[i][++j])
+		{
+			if (is_player(map[i][j]))
+			{
+				count++;
+				pos[0] = j;
+				pos[1] = i;
+			}
+		}
+	}
+	if (count == 1)
+		save_player(player, pos[0], pos[1]);
+	return (count);
 }
 
 //Free the map memory
