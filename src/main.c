@@ -12,70 +12,72 @@
 
 #include "../includes/cub3d.h"
 
-int	main(int argc, char **argv)
+static int	validate_args(int argc, char **argv)
 {
-	t_data	*data;
-
 	if (argc != 2)
 	{
 		ft_printf("Usage: %s <map_file.cub>\n", argv[0]);
-		return (EXIT_FAILURE);
+		return (0);
 	}
-
-	// Verificar que el archivo tenga extensión .cub
 	if (!ft_strnstr(argv[1], ".cub", ft_strlen(argv[1])))
 	{
 		ft_printf("Error: File must have .cub extension\n");
-		return (EXIT_FAILURE);
+		return (0);
 	}
+	return (1);
+}
+
+static void	init_plane_pointers(t_plane *plane)
+{
+	plane->no_texture = NULL;
+	plane->so_texture = NULL;
+	plane->we_texture = NULL;
+	plane->ea_texture = NULL;
+	plane->tex_north = NULL;
+	plane->tex_south = NULL;
+	plane->tex_west = NULL;
+	plane->tex_east = NULL;
+}
+
+static t_data	*init_data_structures(void)
+{
+	t_data	*data;
 
 	data = malloc(sizeof(t_data));
 	if (!data)
 	{
 		ft_printf("Error allocating memory for data\n");
-		return (EXIT_FAILURE);
+		return (NULL);
 	}
-
-	// Inicializar la estructura plane
 	data->plane = malloc(sizeof(t_plane));
 	if (!data->plane)
 	{
 		free(data);
 		ft_printf("Error allocating memory for plane\n");
-		return (EXIT_FAILURE);
+		return (NULL);
 	}
-	
-	// Inicializar punteros a NULL para cleanup seguro
-	data->plane->NO_texture = NULL;
-	data->plane->SO_texture = NULL;
-	data->plane->WE_texture = NULL;
-	data->plane->EA_texture = NULL;
-	data->plane->tex_north = NULL;
-	data->plane->tex_south = NULL;
-	data->plane->tex_west = NULL;
-	data->plane->tex_east = NULL;
+	init_plane_pointers(data->plane);
 	data->map = NULL;
 	data->player = NULL;
 	data->mlx = NULL;
+	return (data);
+}
 
-	// Leer y parsear el archivo .cub completo
+int	main(int argc, char **argv)
+{
+	t_data	*data;
+
+	if (!validate_args(argc, argv))
+		return (EXIT_FAILURE);
+	data = init_data_structures();
+	if (!data)
+		return (EXIT_FAILURE);
 	if (read_cub(argv[1], data) != 1)
 	{
 		cleanup_data(data);
 		return (EXIT_FAILURE);
 	}
-
-	// Convertir colores RGB a formato RGBA
 	parse_color(data->plane);
-
-	// DEBUG: Descomentar para ver información del mapa
-	// print_map_debug(data->map);
-	// ft_printf("Textures: NO=[%s] SO=[%s] WE=[%s] EA=[%s]\n",
-	//     data->plane->NO_texture, data->plane->SO_texture,
-	//     data->plane->WE_texture, data->plane->EA_texture);
-	// ft_printf("Colors: Floor=0x%X Ceiling=0x%X\n",
-	//     data->plane->fcolor, data->plane->ccolor);
-
 	init_mlx(data);
 	return (EXIT_SUCCESS);
 }

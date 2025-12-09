@@ -74,13 +74,13 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
 //printf
 
-int	ft_printf(char const *v_inputs, ...);
-int	ft_putchar_p_fd(char c, int fd);
-int	ft_putstr_p_fd(char *s, int fd);
-int	ft_putnbr_p_fd(int n, int fd);
-int	ft_putnbrfforuinput_fd(unsigned int n, int fd);
-int	ft_hexaprint(unsigned long long nbr, char c);
-int	ft_voidptrwrite(unsigned long long input);
+int		ft_printf(char const *v_inputs, ...);
+int		ft_putchar_p_fd(char c, int fd);
+int		ft_putstr_p_fd(char *s, int fd);
+int		ft_putnbr_p_fd(int n, int fd);
+int		ft_putnbrfforuinput_fd(unsigned int n, int fd);
+int		ft_hexaprint(unsigned long long nbr, char c);
+int		ft_voidptrwrite(unsigned long long input);
 
 //get_next_line
 

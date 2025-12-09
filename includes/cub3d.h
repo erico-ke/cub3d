@@ -69,24 +69,24 @@ typedef struct s_ray
 	int				drawend;
 	double			wallx;
 	int				texx;
-}   t_ray;
+}	t_ray;
 
 typedef struct s_plane
 {
-	char			*NO_texture;
-	char			*SO_texture;
-	char			*WE_texture;
-	char			*EA_texture;
+	char			*no_texture;
+	char			*so_texture;
+	char			*we_texture;
+	char			*ea_texture;
 	mlx_texture_t	*tex_north;
 	mlx_texture_t	*tex_south;
 	mlx_texture_t	*tex_west;
 	mlx_texture_t	*tex_east;
-	int				F_red;
-	int				F_green;
-	int				F_blue;
-	int				C_red;
-	int				C_green;
-	int				C_blue;
+	int				f_red;
+	int				f_green;
+	int				f_blue;
+	int				c_red;
+	int				c_green;
+	int				c_blue;
 	uint32_t		ccolor;
 	uint32_t		fcolor;
 }	t_plane;
@@ -264,32 +264,51 @@ void		handle_movement(t_data *data);
 /* CLEANUP FUNCTIONS */
 void		cleanup_data(t_data *data);
 
+/* PLAYER FUNCTIONS */
+void		init_player(t_data *data);
+void		set_player_direction(t_player *player, char orientation);
+void		calculate_map_dimensions(t_data *data);
+
+/* MLX FUNCTIONS */
+void		handle_keypress(mlx_key_data_t keydata, void *param);
+void		game_loop(void *param);
+void		init_mlx(t_data *data);
+
+/* RAYCAST FUNCTIONS */
+void		cast_single_ray(t_data *data, int x);
+void		render_frame(t_data *data);
+void		calculate_texture_x(t_ray *ray, t_player *player,
+				mlx_texture_t *texture);
+void		draw_vertical_line(t_data *data, int x, t_ray *ray);
+
 /* TEXTURE FUNCTIONS */
 void		load_textures(t_data *data);
 uint32_t	get_texture_color(mlx_texture_t *texture, int x, int y);
+mlx_texture_t	*select_texture(t_data *data, t_ray *ray);
 
 /* PARSER FUNCTIONS */
 int			read_cub(const char *filecub, t_data *data);
 void		textures_n_colors(char *line, t_data *data, char **rgb);
 void		parse_color(t_plane *plane);
+char		*read_map_lines(int fd, t_data *data);
 void		free_map(char **map);
 void		print_map_debug(char **map);
 
 /* PASER AUX FUNCS*/
-int		closed_line(char *line);
-char	get_first(char *line);
-char	get_last(char *line);
-int		check_perimeter(char **map);
-int		is_player(char c);
-void	save_player(t_player *player, int x, int y);
-int		check_player(char **map, t_player *player, int i, int j);
-int		is_playable(char c);
-int		valid_zone(char c);
-int		check_zone(char **map, int i, int j);
-int		check_hole(char **map);
-int		check_instances(char **map, t_player *player, t_plane *plane);
-int		check_textures(t_plane *plane);
-int		check_colors(t_plane *plane);
-int		check_config(t_plane *plane);
+int			closed_line(char *line);
+char		get_first(char *line);
+char		get_last(char *line);
+int			check_perimeter(char **map);
+int			is_player(char c);
+void		save_player(t_player *player, int x, int y);
+int			check_player(char **map, t_player *player, int i, int j);
+int			is_playable(char c);
+int			valid_zone(char c);
+int			check_zone(char **map, int i, int j);
+int			check_hole(char **map);
+int			check_instances(char **map, t_player *player, t_plane *plane);
+int			check_textures(t_plane *plane);
+int			check_colors(t_plane *plane);
+int			check_config(t_plane *plane);
 
 #endif

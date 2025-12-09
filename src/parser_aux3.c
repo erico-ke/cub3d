@@ -14,26 +14,26 @@
 
 int	check_textures(t_plane *plane)
 {
-	if (!plane->NO_texture)
+	if (!plane->no_texture)
 		return (ft_printf("Error: Missing North texture (NO)\n"), 0);
-	if (!plane->SO_texture)
+	if (!plane->so_texture)
 		return (ft_printf("Error: Missing South texture (SO)\n"), 0);
-	if (!plane->WE_texture)
+	if (!plane->we_texture)
 		return (ft_printf("Error: Missing West texture (WE)\n"), 0);
-	if (!plane->EA_texture)
+	if (!plane->ea_texture)
 		return (ft_printf("Error: Missing East texture (EA)\n"), 0);
 	return (1);
 }
 
 int	check_colors(t_plane *plane)
 {
-	if (plane->F_red < 0 || plane->F_red > 255
-		|| plane->F_green < 0 || plane->F_green > 255
-		|| plane->F_blue < 0 || plane->F_blue > 255)
+	if (plane->f_red < 0 || plane->f_red > 255
+		|| plane->f_green < 0 || plane->f_green > 255
+		|| plane->f_blue < 0 || plane->f_blue > 255)
 		return (ft_printf("Error: Invalid Floor color\n"), 0);
-	if (plane->C_red < 0 || plane->C_red > 255
-		|| plane->C_green < 0 || plane->C_green > 255
-		|| plane->C_blue < 0 || plane->C_blue > 255)
+	if (plane->c_red < 0 || plane->c_red > 255
+		|| plane->c_green < 0 || plane->c_green > 255
+		|| plane->c_blue < 0 || plane->c_blue > 255)
 		return (ft_printf("Error: Invalid Ceiling color\n"), 0);
 	return (1);
 }

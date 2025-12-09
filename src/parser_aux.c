@@ -17,7 +17,6 @@ int	closed_line(char *line)
 	int	i;
 
 	i = 0;
-
 	while (line[i] && line[i] != '\n')
 	{
 		if (line[i] != '1' && line[i] != ' ')
@@ -32,7 +31,7 @@ char	get_first(char *line)
 	int	i;
 
 	i = 0;
-	while(line[i] == ' ')
+	while (line[i] == ' ')
 		i++;
 	return (line[i]);
 }
@@ -49,13 +48,30 @@ char	get_last(char *line)
 	return ('\0');
 }
 
-int	is_player(char c)
+int	check_perimeter(char **map)
 {
-	return (c == 'N' || c == 'S' || c == 'E' || c == 'W');
-}
+	int		i;
+	int		lline;
+	char	last;
 
-void	save_player(t_player *player, int x, int y)
-{
-	player->x = x;
-	player->y = y;
+	i = 0;
+	last = '\0';
+	if (!map)
+		return (0);
+	while (map[i])
+		i++;
+	lline = i - 1;
+	i = 0;
+	if (!closed_line(map[0]) || !closed_line(map[lline]))
+		return (0);
+	while (map[i])
+	{
+		if (get_first(map[i]) != '1')
+			return (0);
+		last = get_last(map[i]);
+		if (last == '\0' || (last != '1' && last != ' '))
+			return (0);
+		i++;
+	}
+	return (1);
 }

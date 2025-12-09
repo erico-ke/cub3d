@@ -59,7 +59,6 @@ int	check_hole(char **map)
 	return (1);
 }
 
-//Check instances(check if we have all the things to start our game)
 int	check_instances(char **map, t_player *player, t_plane *plane)
 {
 	if (!check_perimeter(map))
