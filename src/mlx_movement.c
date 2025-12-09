@@ -52,10 +52,10 @@ void	handle_movement(t_data *data)
 	if (mlx_is_key_down(data->mlx, MLX_KEY_S))
 		move_player(data, -data->player->dir_x * MOVE_SPEED,
 			-data->player->dir_y * MOVE_SPEED);
-	if (mlx_is_key_down(data->mlx, MLX_KEY_A))
+	if (mlx_is_key_down(data->mlx, MLX_KEY_D))
 		move_player(data, data->player->plane_x * MOVE_SPEED,
 			data->player->plane_y * MOVE_SPEED);
-	if (mlx_is_key_down(data->mlx, MLX_KEY_D))
+	if (mlx_is_key_down(data->mlx, MLX_KEY_A))
 		move_player(data, -data->player->plane_x * MOVE_SPEED,
 			-data->player->plane_y * MOVE_SPEED);
 	if (mlx_is_key_down(data->mlx, MLX_KEY_LEFT))
