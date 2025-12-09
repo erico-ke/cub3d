@@ -1,0 +1,88 @@
+# Archivo de supresión para MLX42 y dependencias gráficas
+{
+   MLX42_init_leak
+   Memcheck:Leak
+   match-leak-kinds: possible,definite,indirect
+   ...
+   fun:mlx_init
+}
+
+{
+   MLX42_image_leak
+   Memcheck:Leak
+   match-leak-kinds: possible,definite,indirect
+   ...
+   fun:mlx_new_image
+}
+
+{
+   GLFW_init_leak
+   Memcheck:Leak
+   match-leak-kinds: possible,definite,indirect
+   ...
+   fun:glfwInit
+}
+
+{
+   GLFW_window_leak
+   Memcheck:Leak
+   match-leak-kinds: possible,definite,indirect
+   ...
+   fun:glfwCreateWindow
+}
+
+{
+   OpenGL_context_leak
+   Memcheck:Leak
+   match-leak-kinds: possible,definite,indirect
+   ...
+   fun:glXCreateContext
+}
+
+{
+   X11_display_leak
+   Memcheck:Leak
+   match-leak-kinds: possible,definite,indirect
+   ...
+   fun:XOpenDisplay
+}
+
+{
+   Mesa_driver_leak
+   Memcheck:Leak
+   match-leak-kinds: possible,definite,indirect
+   ...
+   obj:/usr/lib/*/dri/*_dri.so
+}
+
+{
+   NVIDIA_driver_leak
+   Memcheck:Leak
+   match-leak-kinds: possible,definite,indirect
+   ...
+   obj:/usr/lib/*/nvidia/*
+}
+
+{
+   GPU_driver_general
+   Memcheck:Leak
+   match-leak-kinds: possible,definite,indirect
+   ...
+   obj:/usr/lib/*/libGL.so*
+}
+
+{
+   Pthread_leak
+   Memcheck:Leak
+   match-leak-kinds: possible,definite,indirect
+   ...
+   fun:pthread_create
+}
+
+{
+   DL_open_leak
+   Memcheck:Leak
+   match-leak-kinds: possible,definite,indirect
+   ...
+   fun:dlopen
+}
