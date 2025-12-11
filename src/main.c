@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fracurul <fracurul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: erico-ke <erico-ke@42malaga.student.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 10:27:57 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/12/08 22:03:48 by fracurul         ###   ########.fr       */
+/*   Updated: 2025/12/11 11:17:11 by erico-ke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,11 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	}
 	parse_color(data->plane);
+	if (!check_instances(data->map, data->player, data->plane))
+	{
+		cleanup_data(data);
+		return (EXIT_FAILURE);
+	}
 	init_mlx(data);
 	return (EXIT_SUCCESS);
 }
