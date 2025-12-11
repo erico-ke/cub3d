@@ -6,7 +6,7 @@
 /*   By: erico-ke <erico-ke@42malaga.student.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:12:45 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/12/11 10:18:30 by erico-ke         ###   ########.fr       */
+/*   Updated: 2025/12/11 15:35:49 by erico-ke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -420,7 +420,7 @@ int				read_cub(const char *filecub, t_data *data);
  * Identifies and parses color lines (F for floor, C for ceiling).
  * Calls parse_color() to convert RGB values to RGBA format.
  */
-void			textures_n_colors(char *line, t_data *data, char **rgb);
+int			textures_n_colors(char *line, t_data *data, char **rgb);
 
 /**
  * @brief Converts RGB color components to RGBA 32-bit format

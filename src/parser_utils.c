@@ -6,7 +6,7 @@
 /*   By: erico-ke <erico-ke@42malaga.student.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 00:00:00 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/12/11 11:08:14 by erico-ke         ###   ########.fr       */
+/*   Updated: 2025/12/11 15:38:39 by erico-ke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ char	*read_map_lines(int fd, t_data *data)
 		if (line[0] == ' ' || line[0] == '\t' || ft_isdigit(line[0])
 			|| line[0] == '1')
 			map_content = ft_strjoin_g(map_content, line);
-		else
-			textures_n_colors(line, data, NULL);
+		else if (!textures_n_colors(line, data, NULL))
+			return (free(line), NULL);
 		free(line);
 		line = get_next_line(fd);
 	}
