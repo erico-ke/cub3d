@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mlx_init.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: erico-ke <erico-ke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: erico-ke <erico-ke@42malaga.student.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 00:00:00 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/12/09 00:00:00 by erico-ke         ###   ########.fr       */
+/*   Updated: 2025/12/11 15:14:58 by erico-ke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,16 @@ void	init_player(t_data *data)
 {
 	char	orientation;
 
-	data->player = malloc(sizeof(t_player));
 	if (!data->player)
 	{
-		perror("Error: player not initialized");
-		mlx_close_window(data->mlx);
-		cleanup_data(data);
-		exit(EXIT_FAILURE);
+		data->player = malloc(sizeof(t_player));
+		if (!data->player)
+		{
+			perror("Error: player not initialized");
+			mlx_close_window(data->mlx);
+			cleanup_data(data);
+			exit(EXIT_FAILURE);
+		}
 	}
 	orientation = find_player_position(data);
 	set_player_direction(data->player, orientation);

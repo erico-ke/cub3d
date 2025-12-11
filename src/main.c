@@ -6,7 +6,7 @@
 /*   By: erico-ke <erico-ke@42malaga.student.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 10:27:57 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/12/11 11:17:11 by erico-ke         ###   ########.fr       */
+/*   Updated: 2025/12/11 15:11:38 by erico-ke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,12 @@ static t_data	*init_data_structures(void)
 	}
 	init_plane_pointers(data->plane);
 	data->map = NULL;
-	data->player = NULL;
+	data->player = malloc(sizeof(t_player));
+	if (!data->player)
+	{
+		ft_printf("Error allocating memory for player\n");
+		return (cleanup_data(data), NULL);
+	}
 	data->mlx = NULL;
 	return (data);
 }
