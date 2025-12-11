@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fracurul <fracurul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: erico-ke <erico-ke@42malaga.student.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:12:45 by erico-ke          #+#    #+#             */
-/*   Updated: 2025/12/08 21:12:31 by fracurul         ###   ########.fr       */
+/*   Updated: 2025/12/11 10:11:32 by erico-ke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@
 
 /* MACROS */
 
-# define SCREEN_W 1200
-# define SCREEN_H 600
+# define SCREEN_W 1800
+# define SCREEN_H 900
 # define MOVE_SPEED 0.05
 # define ROT_SPEED 0.03
 
@@ -112,7 +112,7 @@ typedef struct s_data
  * Sets up the MLX window, creates the image buffer, initializes player position,
  * creates test map, and starts the main game loop with event handling.
  */
-void		init_mlx(t_data *data);
+void			init_mlx(t_data *data);
 
 /**
  * @brief Initializes a ray for raycasting calculation for a specific screen
@@ -126,7 +126,7 @@ void		init_mlx(t_data *data);
  * Calculates deltadist = |1/raydir| (distance ray travels to cross
  * one grid line)
  */
-void		init_ray(t_ray *ray, t_player *player, int x);
+void			init_ray(t_ray *ray, t_player *player, int x);
 
 /**
  * @brief Calculates step direction and initial side distances for DDA algorithm
@@ -137,7 +137,7 @@ void		init_ray(t_ray *ray, t_player *player, int x);
  * Calculates initial sidedist: distance from current position to next grid line.
  * Formula: sidedist = (next_grid_pos - current_pos) * deltadist
  */
-void		calculate_step_and_side_dist(t_ray *ray, t_player *player);
+void			calculate_step_and_side_dist(t_ray *ray, t_player *player);
 
 /**
  * @brief Performs Digital Differential Analyzer (DDA) algorithm to find wall
@@ -150,7 +150,7 @@ void		calculate_step_and_side_dist(t_ray *ray, t_player *player);
  * Sets 'side' to indicate if wall hit was vertical (0) or horizontal (1).
  * Stops when hitting a wall character ('1').
  */
-void		perform_dda(t_ray *ray, char **map);
+void			perform_dda(t_ray *ray, char **map);
 
 /**
  * @brief Calculates perpendicular wall distance and screen drawing boundaries
@@ -163,7 +163,7 @@ void		perform_dda(t_ray *ray, char **map);
  * Calculates wall height: SCREEN_H / perpendicular_distance
  * Determines drawstart/drawend: vertical pixel range to draw the wall on screen.
  */
-void		calculate_wall_distance(t_ray *ray, t_player *player);
+void			calculate_wall_distance(t_ray *ray, t_player *player);
 
 /**
  * @brief Draws a vertical line representing a wall column on screen
@@ -175,7 +175,7 @@ void		calculate_wall_distance(t_ray *ray, t_player *player);
  * Iterates from drawstart to drawend, setting each pixel to the wall color.
  * Uses mlx_put_pixel() to draw individual pixels on the image buffer.
  */
-void		draw_vertical_line(t_data *data, int x, t_ray *ray);
+void			draw_vertical_line(t_data *data, int x, t_ray *ray);
 
 /**
  * @brief Executes complete raycasting process for a single screen column
@@ -187,7 +187,7 @@ void		draw_vertical_line(t_data *data, int x, t_ray *ray);
  *  detection,
  * 4. Calculate distances and screen boundaries, 5. Draw the resulting wall line.
  */
-void		cast_single_ray(t_data *data, int x);
+void			cast_single_ray(t_data *data, int x);
 
 /**
  * @brief Clears the screen by drawing ceiling and floor colors
@@ -197,7 +197,7 @@ void		cast_single_ray(t_data *data, int x);
  * Fills lower half of screen (y >= SCREEN_H/2) with floor color.
  * Creates the background before drawing walls on top.
  */
-void		clear_background(t_data *data);
+void			clear_background(t_data *data);
 
 /**
  * @brief Renders a complete frame by casting rays for all screen columns
@@ -208,7 +208,7 @@ void		clear_background(t_data *data);
  * Calls cast_single_ray() for each column to build the complete 3D view.
  * This function creates the entire visible scene from the player's perspective.
  */
-void		render_frame(t_data *data);
+void			render_frame(t_data *data);
 
 /**
  * @brief Determines wall color based on ray direction and applies shading
@@ -220,7 +220,7 @@ void		render_frame(t_data *data);
  * - East/West walls (side==0): Blue (east) or Yellow (west)
  * Applies shading: horizontal walls are darker (color >> 1) for depth effect.
  */
-uint32_t	get_wall_color(t_ray *ray);
+uint32_t		get_wall_color(t_ray *ray);
 
 /**
  * @brief Moves player position with collision detection
@@ -233,7 +233,7 @@ uint32_t	get_wall_color(t_ray *ray);
  * Only updates position if the new position is not inside a wall.
  * Updates both floating-point (x_uni/y_uni) and integer (x/y) coordinates.
  */
-void		move_player(t_data *data, double move_x, double move_y);
+void			move_player(t_data *data, double move_x, double move_y);
 
 /**
  * @brief Rotates player direction and camera plane by specified angle
@@ -246,7 +246,7 @@ void		move_player(t_data *data, double move_x, double move_y);
  * Also rotates the camera plane vector to maintain proper FOV orientation.
  * This creates smooth camera rotation for looking left/right.
  */
-void		rotate_player(t_data *data, double rot);
+void			rotate_player(t_data *data, double rot);
 
 /**
  * @brief Processes continuous keyboard input for player movement and
@@ -259,56 +259,56 @@ void		rotate_player(t_data *data, double rot);
  * LEFT/RIGHT arrows: Camera rotation by ±ROT_SPEED radians
  * All movements include collision detection via move_player().
  */
-void		handle_movement(t_data *data);
+void			handle_movement(t_data *data);
 
 /* CLEANUP FUNCTIONS */
-void		cleanup_data(t_data *data);
+void			cleanup_data(t_data *data);
 
 /* PLAYER FUNCTIONS */
-void		init_player(t_data *data);
-void		set_player_direction(t_player *player, char orientation);
-void		calculate_map_dimensions(t_data *data);
+void			init_player(t_data *data);
+void			set_player_direction(t_player *player, char orientation);
+void			calculate_map_dimensions(t_data *data);
 
 /* MLX FUNCTIONS */
-void		handle_keypress(mlx_key_data_t keydata, void *param);
-void		game_loop(void *param);
-void		init_mlx(t_data *data);
+void			handle_keypress(mlx_key_data_t keydata, void *param);
+void			game_loop(void *param);
+void			init_mlx(t_data *data);
 
 /* RAYCAST FUNCTIONS */
-void		cast_single_ray(t_data *data, int x);
-void		render_frame(t_data *data);
-void		calculate_texture_x(t_ray *ray, t_player *player,
-				mlx_texture_t *texture);
-void		draw_vertical_line(t_data *data, int x, t_ray *ray);
+void			cast_single_ray(t_data *data, int x);
+void			render_frame(t_data *data);
+void			calculate_texture_x(t_ray *ray, t_player *player,
+					mlx_texture_t *texture);
+void			draw_vertical_line(t_data *data, int x, t_ray *ray);
 
 /* TEXTURE FUNCTIONS */
-void		load_textures(t_data *data);
-uint32_t	get_texture_color(mlx_texture_t *texture, int x, int y);
+void			load_textures(t_data *data);
+uint32_t		get_texture_color(mlx_texture_t *texture, int x, int y);
 mlx_texture_t	*select_texture(t_data *data, t_ray *ray);
 
 /* PARSER FUNCTIONS */
-int			read_cub(const char *filecub, t_data *data);
-void		textures_n_colors(char *line, t_data *data, char **rgb);
-void		parse_color(t_plane *plane);
-char		*read_map_lines(int fd, t_data *data);
-void		free_map(char **map);
-void		print_map_debug(char **map);
+int				read_cub(const char *filecub, t_data *data);
+void			textures_n_colors(char *line, t_data *data, char **rgb);
+void			parse_color(t_plane *plane);
+char			*read_map_lines(int fd, t_data *data);
+void			free_map(char **map);
+void			print_map_debug(char **map);
 
 /* PASER AUX FUNCS*/
-int			closed_line(char *line);
-char		get_first(char *line);
-char		get_last(char *line);
-int			check_perimeter(char **map);
-int			is_player(char c);
-void		save_player(t_player *player, int x, int y);
-int			check_player(char **map, t_player *player, int i, int j);
-int			is_playable(char c);
-int			valid_zone(char c);
-int			check_zone(char **map, int i, int j);
-int			check_hole(char **map);
-int			check_instances(char **map, t_player *player, t_plane *plane);
-int			check_textures(t_plane *plane);
-int			check_colors(t_plane *plane);
-int			check_config(t_plane *plane);
+int				closed_line(char *line);
+char			get_first(char *line);
+char			get_last(char *line);
+int				check_perimeter(char **map);
+int				is_player(char c);
+void			save_player(t_player *player, int x, int y);
+int				check_player(char **map, t_player *player, int i, int j);
+int				is_playable(char c);
+int				valid_zone(char c);
+int				check_zone(char **map, int i, int j);
+int				check_hole(char **map);
+int				check_instances(char **map, t_player *player, t_plane *plane);
+int				check_textures(t_plane *plane);
+int				check_colors(t_plane *plane);
+int				check_config(t_plane *plane);
 
 #endif
